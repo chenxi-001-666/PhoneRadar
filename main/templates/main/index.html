@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phone Radar - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img-top { height: 200px; object-fit: contain; background: #f8f9fa; padding: 10px; }
+        .brand-section { background: #e9ecef; padding: 20px; border-radius: 10px; margin-bottom: 40px; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="#">Phone Radar</a>
+        <div class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+                <span class="nav-link text-light">Hello, {{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link" style="display: inline; padding: 0;">Logout</button>
+                </form>
+            {% else %}
+                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <h1 class="text-center mb-5">📱 Phone Radar</h1>
+
+    <div class="alert alert-success text-center shadow-sm mb-4">
+        <strong>Reminder: </strong> {{ welcome_msg }}
+    </div>
+
+    <div class="brand-section">
+        <h3>Hottest brands</h3>
+        <div class="row row-cols-2 row-cols-md-4 g-4 mt-2">
+            {% for brand in brands %}
+            <div class="col">
+                <div class="card h-100 text-center">
+                    {% if brand.logo %}
+                        <img src="{{ brand.logo.url }}" class="card-img-top" alt="{{ brand.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ brand.name }}</h5>
+                        <p class="text-muted small">Starting since {{ brand.manufacturing_since }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <h3>Recent Models</h3>
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+        {% for model in models %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if model.photo %}
+                    <img src="{{ model.photo.url }}" class="card-img-top" alt="{{ model.model_name }}">
+                {% else %}
+                    <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ model.brand.name }} {{ model.model_name }}</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><strong>Platform:</strong> {{ model.platform }}</li>
+                        <li><strong>Launch Date:</strong> {{ model.launch_date }}</li>
+                    </ul>
+                    <a href="{% url 'phone_detail' model.pk %}" class="btn btn-outline-primary w-100">Check Review</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="my-4 text-center">
+        <a href="{% url 'add_review' %}" class="btn btn-primary btn-lg shadow">
+            ✍️ Click here to add a phone review
+        </a>
+    </div>
+
+    <div class="mt-4">
+        <h4>Historical reviews</h4>
+        {% for review in user_reviews %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h6>{{ review.title }}</h6>
+                    <small class="text-muted">Related model:
+                        {% for m in review.models_covered.all %}{{ m.model_name }} {% endfor %}
+                    </small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

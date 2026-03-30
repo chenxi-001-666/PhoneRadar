@@ -10,6 +10,9 @@
 
 **Phone Radar** 是一个基于 **Django 5.x** 构建的综合型手机评测社区。它允许科技爱好者按品牌浏览手机规格，并作为注册会员发布深度长文评测。
 
+* **Demo Link**: https://drive.google.com/file/d/1xjr_LBIBF4jFfWt261k8E13P2UOpooso/view?usp=sharing
+* **项目展示链接**: https://drive.google.com/file/d/1xjr_LBIBF4jFfWt261k8E13P2UOpooso/view?usp=sharing
+
 ---
 
 ## 📖 Storyboard (User Journey) / 用户旅程
